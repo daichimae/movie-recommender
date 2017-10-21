@@ -1,5 +1,4 @@
 import javafx.util.Pair;
-import model.ImdbEntry;
 import model.MovieRecommenderModel;
 import model.UserProfile;
 
@@ -16,20 +15,12 @@ public class MovieRecommenderApplication {
     }
 
     /**
-     * Test the Model. For test use only and to be deleted.
+     * Test the Model. For test use only.
      * @param model model to be tested
      */
     static private void testModel(MovieRecommenderModel model) {
-        System.out.println(model.imdbData.get(146));
-        System.out.println("------------------------------------------");
-
-        // Test weight creation.
-        for (ImdbEntry.Genre genre : ImdbEntry.Genre.values()) {
-            System.out.println(genre + ": " + model.weights.get(genre));
-        }
-        System.out.println("------------------------------------------");
-
-        // Test score calculation.
+        // Create a user profile, like The matrix, American Beauty, dislike
+        // Independence Day and show top 5 recommendations and their scores.
         UserProfile user1 = new UserProfile(model);
         user1.setPreference("tt0133093", 1); // Like The Matrix
         user1.setPreference("tt0169547", 1); // Like American Beauty
@@ -41,20 +32,41 @@ public class MovieRecommenderApplication {
             System.out.println(model.getTitleByTid(title.getKey()) + " (" + title.getValue() + ")");
         }
         System.out.println("------------------------------------------");
+
+        // Create another user profile, randomly like or dislike 100 movies and
+        // show the set of scores and count each score's occurrences.
         System.out.println("Set of scores:");
         Random random = new Random();
         UserProfile user2 = new UserProfile(model);
-        // Randomly like or dislike 1000 movies.
-        for (int i = 0; i < 1000; i++)
-            user2.setPreference(model.getRandomTitle(), random.nextBoolean() ? 1 : -1);
+        // Randomly like or dislike 100 movies.
+        for (int i = 0; i < 100; i++) {
+            String tid = model.getRandomTitle();
+            user2.setPreference(tid, random.nextBoolean() ? 1 : -1);
+        }
 
         titles = user1.getRecommendedTitles(model.imdbData.size());
         double score = 1;
+        int count = 0;
         for (Pair<String, Double> title : titles) {
+            count++;
             if (score > title.getValue()) {
                 score = title.getValue();
-                System.out.println(score);
+                System.out.println(score + " (" + count + ")");
+                count = 0;
             }
         }
+        System.out.println("------------------------------------------");
+
+        // Randomly pick 100 titles and get the average count of the titles that
+        // have the same genres as the picked titles.
+        String tid = model.getRandomTitle();
+        System.out.println(model.getEntryByTid(tid) + ": " + model.countTitlesWithSameGenres(tid));
+
+        int totalCount = 0;
+        for (int i = 0; i < 100; i++) {
+            tid = model.getRandomTitle();
+            totalCount += model.countTitlesWithSameGenres(tid);
+        }
+        System.out.println("Average duplicate count: " + (totalCount / 100));
     }
 }
