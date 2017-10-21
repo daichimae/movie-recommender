@@ -9,7 +9,7 @@ import java.util.List;
  * This class represents an IMDb entry.
  */
 public class ImdbEntry {
-    enum Genre {
+    public static enum Genre {
         ACTION, ADULT, ADVENTURE, ANIMATION, BIOGRAPHY, COMEDY, CRIME,
         DOCUMENTARY, DRAMA, FAMILY, FANTASY, FILMNOIR, GAMESHOW, HISTORY,
         HORROR, MUSIC, MUSICAL, MYSTERY, NEWS, REALITYTV, ROMANCE, SCIFI, SHORT,
@@ -32,7 +32,7 @@ public class ImdbEntry {
     public int numberOfNewsArticles;
     public int numberOfUserReviews;
     public int numberOfGenres;
-    public HashMap<Genre, Integer> genres;
+    public HashMap<Genre, Double> genres;
 
     public ImdbEntry(String[] entry) {
         fn = entry[0];
@@ -55,7 +55,7 @@ public class ImdbEntry {
         genres = new HashMap<>();
         int index = 16;
         for (Genre genre : Genre.values()) {
-            genres.put(genre, entry[index].length() == 0 ? -1 : Integer.parseInt(entry[index]));
+            genres.put(genre, entry[index].length() == 0 ? 0.0 : Double.parseDouble(entry[index]));
             index++;
         }
     }
@@ -67,6 +67,7 @@ public class ImdbEntry {
             if (this.genres.get(genre) == 1)
                 genres.add(genre);
         }
+
         return "Title: " + title + ", " + genres;
     }
 }
