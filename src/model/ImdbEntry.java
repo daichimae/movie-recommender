@@ -9,7 +9,7 @@ import java.util.List;
  * This class represents an IMDb entry.
  */
 public class ImdbEntry {
-    public static enum Genre {
+    public enum Genre {
         ACTION, ADULT, ADVENTURE, ANIMATION, BIOGRAPHY, COMEDY, CRIME,
         DOCUMENTARY, DRAMA, FAMILY, FANTASY, FILMNOIR, GAMESHOW, HISTORY,
         HORROR, MUSIC, MUSICAL, MYSTERY, NEWS, REALITYTV, ROMANCE, SCIFI, SHORT,
@@ -62,9 +62,9 @@ public class ImdbEntry {
 
     @Override
     public String toString() {
-        List<Genre> genres = new ArrayList<Genre>();
+        List<Genre> genres = new ArrayList<>();
         for (Genre genre : Genre.values()) {
-            if (this.genres.get(genre) == 1)
+            if (this.genres.get(genre) > 0)
                 genres.add(genre);
         }
 

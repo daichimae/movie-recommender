@@ -59,12 +59,9 @@ public class MovieRecommenderApplication {
 
         // Randomly pick 100 titles and get the average count of the titles that
         // have the same genres as the picked titles.
-        String tid = model.getRandomTitle();
-        System.out.println(model.getEntryByTid(tid) + ": " + model.countTitlesWithSameGenres(tid));
-
         int totalCount = 0;
         for (int i = 0; i < 100; i++) {
-            tid = model.getRandomTitle();
+            String tid = model.getRandomTitle();
             totalCount += model.countTitlesWithSameGenres(tid);
         }
         System.out.println("Average duplicate count: " + (totalCount / 100));

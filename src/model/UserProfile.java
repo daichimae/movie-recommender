@@ -77,7 +77,7 @@ public class UserProfile {
                 score += (entry.genres.get(genre) * model.weights.get(genre) * genreScores.get(genre));
             }
 
-            titleScores.add(new Pair<String, Double>(entry.tid, score));
+            titleScores.add(new Pair<>(entry.tid, score));
         }
 
         // Sort the list in descending order.

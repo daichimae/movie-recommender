@@ -3,10 +3,7 @@ package model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -24,6 +21,7 @@ public class MovieRecommenderModel {
     public MovieRecommenderModel() {
         loadDataset();
         generateWeightVector();
+        normalizeGenreAttributes();
     }
 
     /**
@@ -81,9 +79,19 @@ public class MovieRecommenderModel {
         }
     }
 
+    public ImdbEntry getEntryByTid(String tid) {
+        for (ImdbEntry entry : imdbData) {
+            if (entry.tid.equals(tid))
+                return entry;
+        }
+
+        return null;
+    }
+
+    // for test use only
     public String getTitleByTid(String tid) {
         for (ImdbEntry entry : imdbData) {
-            if (entry.tid == tid)
+            if (Objects.equals(entry.tid, tid))
                 return entry.title;
         }
 
@@ -94,5 +102,38 @@ public class MovieRecommenderModel {
     public String getRandomTitle() {
         Random rand = new Random();
         return imdbData.get(rand.nextInt(imdbData.size())).tid;
+    }
+
+    /**
+     * Count the number of titles that have the same genres as the given title.
+     * @param tid
+     * @return
+     */
+    public int countTitlesWithSameGenres(String tid) {
+        int count = 0;
+        ImdbEntry imdbEntry = null;
+
+        for (ImdbEntry entry : imdbData) {
+            if (entry.tid.equals(tid))
+                imdbEntry = entry;
+        }
+
+        boolean hasSameGenres;
+
+        for (ImdbEntry entry : imdbData) {
+            hasSameGenres = true;
+
+            for (ImdbEntry.Genre genre : ImdbEntry.Genre.values()) {
+                if (Double.compare(entry.genres.get(genre), imdbEntry.genres.get(genre)) != 0) {
+                    hasSameGenres = false;
+                    break;
+                }
+            }
+
+            if(hasSameGenres)
+                count++;
+        }
+
+        return count - 1;
     }
 }
