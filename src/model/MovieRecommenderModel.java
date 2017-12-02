@@ -88,6 +88,15 @@ public class MovieRecommenderModel {
         return null;
     }
 
+    public ArrayList<ImdbEntry> getEntriesFromYear(int year){
+        ArrayList<ImdbEntry> entries = new ArrayList<ImdbEntry>();
+        for (ImdbEntry entry : imdbData){
+            if (entry.year == year)
+                entries.add(entry);
+        }
+        return entries;
+    }
+
     // for test use only
     public String getTitleByTid(String tid) {
         for (ImdbEntry entry : imdbData) {
