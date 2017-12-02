@@ -9,18 +9,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Pair;
 import model.ImdbEntry;
 import model.MovieRecommenderModel;
 import model.UserProfile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class TableTest {
 
     @FXML
     private TextField filterField;
     @FXML
     private Button nextButton;
+    @FXML
+    private Button backButton;
     @FXML
     private Label selectedMovies;
     @FXML
@@ -36,8 +42,8 @@ public class TableTest {
     @FXML
     private TableColumn<ImdbEntry, String> yearColumn;
 
-    private ArrayList<ImdbEntry> likedMovies = new ArrayList<>();
-    private ArrayList<ImdbEntry> dislikedMovies = new ArrayList<>();
+    private Set<ImdbEntry> likedMovies = new HashSet<>();
+    private Set<ImdbEntry> dislikedMovies = new HashSet<>();
 
 
     private ObservableList<ImdbEntry> allMovies = FXCollections.observableArrayList();
@@ -106,9 +112,10 @@ public class TableTest {
             @Override
             public void handle(MouseEvent e){
                 if (e.getClickCount() == 2){
-                    System.out.println(movieTable.getSelectionModel().getSelectedItem());
-                    selectedMoviesList.add(movieTable.getSelectionModel().getSelectedItem());
-                    selectedTable.setItems(selectedMoviesList);
+                    if (!selectedMoviesList.contains(movieTable.getSelectionModel().getSelectedItem())){
+                        selectedMoviesList.add(movieTable.getSelectionModel().getSelectedItem());
+                        selectedTable.setItems(selectedMoviesList);
+                    }
                 }
             }
         });
@@ -126,11 +133,14 @@ public class TableTest {
             @Override
             public void handle(MouseEvent e){
                 if (selectedMovies.getText().equals("Liked Movies")){
+                    //save off liked movies, reset table and start doing disliked
                     selectedMovies.setText("Disliked Movies");
                     selectedMovies.setTextFill(Color.RED);
                     likedMovies.addAll(selectedMoviesList);
                     selectedMoviesList.clear();
+                    selectedMoviesList.addAll(dislikedMovies);
                     selectedTable.setItems(selectedMoviesList);
+                    backButton.setVisible(true);
                 }
                 else{
                     dislikedMovies.addAll(selectedMoviesList);
@@ -153,6 +163,19 @@ public class TableTest {
                     a.show();
                 }
             }
+        });
+        // go back to liked stuff, repopulate list with previously liked movies
+        backButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+           @Override
+           public void handle(MouseEvent e){
+               dislikedMovies.addAll(selectedMoviesList);
+               selectedMovies.setText("Liked Movies");
+               selectedMovies.setTextFill(Paint.valueOf("#37eb00"));
+               selectedMoviesList.clear();
+               selectedMoviesList.addAll(likedMovies);
+               selectedTable.setItems(selectedMoviesList);
+               backButton.setVisible(false);
+           }
         });
     }
 }
