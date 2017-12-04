@@ -20,7 +20,7 @@ public class UI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Sorting and Filtering");
+        primaryStage.setTitle("Movie Recommender");
 
         try {
             FXMLLoader loader = new FXMLLoader(UI.class.getResource("TableTest.fxml"));

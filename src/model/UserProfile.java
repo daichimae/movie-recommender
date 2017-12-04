@@ -76,6 +76,10 @@ public class UserProfile {
             for (ImdbEntry.Genre genre : ImdbEntry.Genre.values()) {
                 score += (entry.genres.get(genre) * model.weights.get(genre) * genreScores.get(genre));
             }
+            // If enough people rated the movie, factor the film's likability into the results
+            if (entry.numberOfUserReviews > 100){
+                score += 0.01 * entry.imdbRating;
+            }
 
             titleScores.add(new Pair<>(entry.tid, score));
         }

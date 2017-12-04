@@ -15,6 +15,7 @@ import model.ImdbEntry;
 import model.MovieRecommenderModel;
 import model.UserProfile;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -140,6 +141,7 @@ public class TableTest {
                     selectedMoviesList.clear();
                     selectedMoviesList.addAll(dislikedMovies);
                     selectedTable.setItems(selectedMoviesList);
+                    nextButton.setText("Finish");
                     backButton.setVisible(true);
                 }
                 else{
@@ -156,7 +158,8 @@ public class TableTest {
                     a.setHeaderText("Recommended Movies");
                     String results = "Results:\n";
                     for (Pair<String, Double> tidScores : curUser.getRecommendedTitles(5)){
-                        results += model.getTitleByTid(tidScores.getKey()) + ": " + tidScores.getValue() + "\n";
+                        String rating = new DecimalFormat("##.#").format(tidScores.getValue() * 100) + '%';
+                        results += model.getTitleByTid(tidScores.getKey()) + ": " + rating + "\n";
                     }
                     a.setContentText(results);
                     //a.setContentText("liked: " + likedMovies + "\ndisliked: " + dislikedMovies);
@@ -169,6 +172,7 @@ public class TableTest {
            @Override
            public void handle(MouseEvent e){
                dislikedMovies.addAll(selectedMoviesList);
+               nextButton.setText("Next");
                selectedMovies.setText("Liked Movies");
                selectedMovies.setTextFill(Paint.valueOf("#37eb00"));
                selectedMoviesList.clear();
